@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         tv = (TextView)findViewById(R.id.tv);
 
         Retrofit.Builder builder = new Retrofit.Builder();
-        builder.baseUrl("http://jsonplaceholder.typicode.com/posts/1/");
+        builder.baseUrl("http://3.36.163.80:8080/ingredients?names=%EB%A6%AC%EB%82%A0%EB%A3%B0");
         builder.addConverterFactory(GsonConverterFactory.create());
         Retrofit retrofit = builder
                 .build();
@@ -47,10 +47,9 @@ public class MainActivity extends AppCompatActivity {
 
                     List<Post> data = response.body();
                     Log.d("TEST","성공성공");
-                    Log.d("TEST", data.get(0).getTitle());
+                    Log.d("TEST", data.get(0).get리날룰());
 
-                    String str = data.get(0).getUserId() + "\n" + data.get(0).getId() + "\n" +
-                            data.get(0).getTitle() + "\n" + data.get(0).getBody();
+                    String str = data.get(0).get리날룰() + "\n";
                     tv.setText(str);
                 }
 
