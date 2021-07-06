@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.google.gson.JsonArray;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -32,24 +34,24 @@ public class MainActivity extends AppCompatActivity {
         tv = (TextView)findViewById(R.id.tv);
 
         Retrofit.Builder builder = new Retrofit.Builder();
-        builder.baseUrl("http://3.36.163.80:8080/ingredients?names=%EB%A6%AC%EB%82%A0%EB%A3%B0");
+        builder.baseUrl("http://3.36.163.80:8080");
         builder.addConverterFactory(GsonConverterFactory.create());
         Retrofit retrofit = builder
                 .build();
 
         RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
 
-        retrofitAPI.getData("1").enqueue(new Callback<List<Post>>() {
+        retrofitAPI.getData("\"리날룰\"").enqueue(new Callback<Post>() {
             @Override
-            public void onResponse(@NonNull Call<List<Post>> call,
-                                   @NonNull Response<List<Post>> response) {
+            public void onResponse(@NonNull Call<Post> call,
+                                   @NonNull Response<Post> response) {
                 if(response.isSuccessful()) {
 
-                    List<Post> data = response.body();
+                    Post data = response.body();
                     Log.d("TEST","성공성공");
-                    Log.d("TEST", data.get(0).get리날룰());
+                    Log.d("TEST", data.getName());
 
-                    String str = data.get(0).get리날룰() + "\n";
+                    String str = data.getName() + "\n" + data.getType() + "\n";
                     tv.setText(str);
                 }
 
@@ -58,8 +60,9 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<Post>> call, Throwable t) {
+            public void onFailure(Call<Post> call, Throwable t) {
                 t.printStackTrace();
+                Log.d("TEST","실패");;
             }
 
 
@@ -69,8 +72,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public interface RetrofitAPI{
-        @GET("/posts")
-        Call<List<Post>> getData(@Query("userId") String id);
+        @GET("test")
+        Call<Post> getData(@Query("name") String name);
 
         @FormUrlEncoded
         @POST("/posts")
@@ -80,3 +83,4 @@ public class MainActivity extends AppCompatActivity {
 
 
 }
+
