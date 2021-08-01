@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.google.gson.JsonArray;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -41,26 +42,29 @@ public class MainActivity extends AppCompatActivity {
 
         RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
 
-        retrofitAPI.getData("\"리날룰\"").enqueue(new Callback<Post>() {
+
+        String[] name1 = {"리날룰"};
+
+        retrofitAPI.getData(name1[0]).enqueue(new Callback<List<Post>>() {
             @Override
-            public void onResponse(@NonNull Call<Post> call,
-                                   @NonNull Response<Post> response) {
+            public void onResponse(@NonNull Call<List<Post>> call,
+                                   @NonNull Response<List<Post>> response) {
                 if(response.isSuccessful()) {
 
-                    Post data = response.body();
+                    List<Post> data = response.body();
                     Log.d("TEST","성공성공");
-                    Log.d("TEST", data.getName());
+                    Log.d("TEST", data.get(0).getName());
 
-                    String str = data.getName() + "\n" + data.getType() + "\n";
+                    String str = data.get(0).getName() + "\n" + data.get(0).getType() + "\n"
+                            + data.get(1).getName() + "\n" + data.get(1).getType() + "\n";
                     tv.setText(str);
                 }
-
 
 
             }
 
             @Override
-            public void onFailure(Call<Post> call, Throwable t) {
+            public void onFailure(Call<List<Post>> call, Throwable t) {
                 t.printStackTrace();
                 Log.d("TEST","실패");;
             }
@@ -72,8 +76,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public interface RetrofitAPI{
-        @GET("test")
-        Call<Post> getData(@Query("name") String name);
+        @GET("/IngreTest?nameTest=트리클로산,리날룰")
+        Call<List<Post>> getData(@Query("name") String name);
 
         @FormUrlEncoded
         @POST("/posts")
