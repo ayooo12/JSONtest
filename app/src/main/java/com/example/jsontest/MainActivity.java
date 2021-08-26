@@ -3,13 +3,11 @@ package com.example.jsontest;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.google.gson.JsonArray;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -25,14 +23,15 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public class MainActivity extends AppCompatActivity {
-    TextView tv;
+    TextView tv[] = new TextView[4];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        tv = (TextView)findViewById(R.id.tv);
+        tv[0] = (TextView)findViewById(R.id.tv1);
+        tv[1] = (TextView)findViewById(R.id.tv2);
 
         Retrofit.Builder builder = new Retrofit.Builder();
         builder.baseUrl("http://3.36.163.80:8080");
@@ -55,9 +54,27 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("TEST","성공성공");
                     Log.d("TEST", data.get(0).getName());
 
-                    String str = data.get(0).getName() + "\n" + data.get(0).getType() + "\n"
-                            + data.get(1).getName() + "\n" + data.get(1).getType() + "\n";
-                    tv.setText(str);
+
+                    tv[0].setText(data.get(0).getName());
+                    tv[1].setText(data.get(1).getName());
+
+                    /*
+                    if(data.get(0).getType().toString()=="O"){
+                        tv[1].setBackgroundColor(Color.RED);
+                    }else tv[1].setBackgroundColor(Color.YELLOW);
+
+                    if(data.get(1).getType().toString()=="O"){
+                        tv[3].setBackgroundColor(Color.RED);
+                    }tv[3].setBackgroundColor(Color.YELLOW);
+*/
+
+
+                    for(int i=0;i<data.size();i++){
+                        if(data.get(i).getType().equals("H")){
+                            tv[i].setBackgroundColor(Color.RED);
+                        }else tv[i].setBackgroundColor(Color.GREEN);
+
+                    }
                 }
 
 
