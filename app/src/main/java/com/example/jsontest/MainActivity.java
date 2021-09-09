@@ -6,6 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.HashMap;
@@ -20,18 +23,23 @@ import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
+
 public class MainActivity extends AppCompatActivity {
-    TextView tv[] = new TextView[4];
+    TextView ing[] = new TextView[4];
+
+    String ingfull = "리날룰";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        tv[0] = (TextView)findViewById(R.id.tv1);
-        tv[1] = (TextView)findViewById(R.id.tv2);
+        ing[0] = (TextView)findViewById(R.id.ing0);
+        ing[1] = (TextView)findViewById(R.id.ing1);
+        ing[2] = (TextView)findViewById(R.id.ing1);
 
         Retrofit.Builder builder = new Retrofit.Builder();
         builder.baseUrl("http://3.36.163.80:8080");
@@ -41,10 +49,11 @@ public class MainActivity extends AppCompatActivity {
 
         RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
 
+        ingfull = "트리클로산";
 
-        String[] name1 = {"리날룰"};
 
-        retrofitAPI.getData(name1[0]).enqueue(new Callback<List<Post>>() {
+
+        retrofitAPI.getPosts(ingfull).enqueue(new Callback<List<Post>>() {
             @Override
             public void onResponse(@NonNull Call<List<Post>> call,
                                    @NonNull Response<List<Post>> response) {
@@ -55,8 +64,14 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("TEST", data.get(0).getName());
 
 
-                    tv[0].setText(data.get(0).getName());
-                    tv[1].setText(data.get(1).getName());
+                    for(int i=0;i<data.size();i++){
+                        ing[i].setText(data.get(i).getName());
+                        ing[i].setVisibility(View.VISIBLE);
+                    }
+
+                    /*
+                    ing[0].setText(data.get(0).getName());
+                    ing[1].setText(data.get(1).getName());*/
 
                     /*
                     if(data.get(0).getType().toString()=="O"){
@@ -68,11 +83,10 @@ public class MainActivity extends AppCompatActivity {
                     }tv[3].setBackgroundColor(Color.YELLOW);
 */
 
-
                     for(int i=0;i<data.size();i++){
                         if(data.get(i).getType().equals("H")){
-                            tv[i].setBackgroundColor(Color.RED);
-                        }else tv[i].setBackgroundColor(Color.GREEN);
+                            ing[i].setBackgroundColor(Color.RED);
+                        }else ing[i].setBackgroundColor(Color.GREEN);
 
                     }
                 }
@@ -93,8 +107,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public interface RetrofitAPI{
-        @GET("/IngreTest?nameTest=트리클로산,리날룰")
-        Call<List<Post>> getData(@Query("name") String name);
+        @GET("/IngreTest?")
+        Call<List<Post>> getPosts(@Query("nameTest") String name);
 
         @FormUrlEncoded
         @POST("/posts")
